@@ -45,7 +45,6 @@ const Product = () => {
     }
 
 
-    console.log(productList);
 
     return (
         <Container maxWidth="lg">

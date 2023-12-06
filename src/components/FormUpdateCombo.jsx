@@ -48,7 +48,6 @@ const FormUpdateCombo = (props) => {
             });
     };
 
-    console.log(combo);
     const handleChange = (e) => {
         e.preventDefault();
         const value = e.target.value;

@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
 import './ViewOrderDetail.css';
-import { useTheme } from "@mui/material";
+import { IconButton, useTheme } from "@mui/material";
 import orderService from "../../service/orderService";
 import { Button } from '@mui/material';
 import orderSerive from '../../service/orderService';
 import { tokens } from "../../theme";
+import { useDispatch, useSelector } from "react-redux";
+import CheckIcon from '@mui/icons-material/Check';
+import  updatedOrderDetailSlice from "../../redux/updatedOrderDetailSlice";
+import { tab } from '@testing-library/user-event/dist/tab';
 
 const ViewOrderDetail = () => {
     const theme = useTheme();
@@ -27,6 +31,7 @@ const ViewOrderDetail = () => {
         orderService.getOrderByIdTable(id)
             .then((res) => {
                 setOrder(res.data);
+                console.log(res.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -71,7 +76,34 @@ const ViewOrderDetail = () => {
 
     }
 
-    console.log(order);
+    // Check if food is extra here
+    const dispatch = useDispatch()
+    const updatedOrderDetails = useSelector((state) => state.updatedOrderDetails.tables)
+    
+    const isExtraItem = (item, tableId) => {
+        const updatedOrderDetail = updatedOrderDetails.find(updatedOrderDetail => updatedOrderDetail.tableId === tableId)
+        console.log('updatedOrderDetail:', updatedOrderDetail);
+        if(updatedOrderDetail) {
+            if (item.product !== null) {
+                return updatedOrderDetail.products.some(product => product.id === item.product.id);
+              }
+            if (item.combo !== null) {
+            return updatedOrderDetail.combos.some(combo => combo.id === item.combo.id);
+            }
+            return false;
+        }
+        return false
+    }
+
+    const handleCheckExtraFood = (item, tableId) => {
+        dispatch(updatedOrderDetailSlice.actions.deleteNotification({
+            item: item,
+            tableId: tableId
+        }))
+    }
+
+    // 
+
     return (
         <div className="container-fluid" style={{ backgroundColor: colors.blueAccent[200] }}>
             <div className="container">
@@ -122,10 +154,10 @@ const ViewOrderDetail = () => {
                                     <thead>
                                         <tr>
                                             <th>STT</th>
-                                            <th>Chi tiết</th>
-                                            <th>Số lượng</th>
+                                            <th>Detail</th>
+                                            <th>Quantity</th>
                                             <th className="text-end">Price</th>
-
+                                            <th className="text-end">Extra Food</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -147,6 +179,17 @@ const ViewOrderDetail = () => {
                                                         </td>
                                                         <td>{element.quantity}</td>
                                                         <td className="text-end">{element.product ? element.product.price : element.combo.price}</td>
+                                                        <td className="text-end">
+                                                            {
+                                                                isExtraItem(element, order.tableId) ? (
+                                                                    <IconButton color='primary' onClick={() => handleCheckExtraFood(element, order.tableId)}>
+                                                                        <CheckIcon/>
+                                                                    </IconButton>
+                                                                ) : ("")
+                                                            }
+
+                                                            
+                                                        </td>
                                                     </tr>
                                                 )
                                             })

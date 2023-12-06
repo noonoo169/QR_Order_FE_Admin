@@ -3,28 +3,28 @@ import { Link } from 'react-router-dom';
 import '../global/popup_notification.css';
 import { useState, useEffect } from 'react';
 
-const PopupNotification = ({ notificationData, onCloseSnackbar }, ref) => {
-
-    const [message, setMessage] = useState('')
-    const [route, setRoute] = useState('')
-
-    useEffect(() => {
-        if (notificationData.message === 'NEW_OFFLINE_ORDER') {
-            const table = notificationData.data;
-            setMessage(`Table ${table.name} has just been ordered`);
-            setRoute(`/tableManagement/viewOrderDetail/${table.id}`);
-        }
-    }, [notificationData]);
+const PopupNotification = ({ notificationData, onCloseSnackbar, handleClickCheck }, ref) => {
 
     return (
         <div className="container" ref={ref}>
             <div className="cookiesContent" id="cookiesPopup">
-                <p className='message'>{notificationData.message}</p>
-                <p className='message'>{message}</p>
-                <Link
-                    to={route}
-                    className="check"
-                    onClick={() => onCloseSnackbar()}>Check</Link>
+                <p className='message'>{notificationData.type}</p>
+                <p className='message'>{notificationData.content}</p>
+                <div class="button-container">
+                    <button
+                        class='close-btn'
+                        onClick={() => onCloseSnackbar()}
+                    >
+                        Close
+                    </button>
+                    <Link
+                        to={notificationData.route}
+                        class="check-btn"
+                        onClick={(e) => { handleClickCheck(notificationData.id); onCloseSnackbar(); }}
+                    >
+                        Check
+                    </Link>
+                </div>
             </div>
         </div>
     );

@@ -17,7 +17,8 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import PopupNotification from "./PopupNotification";
 import { useDispatch, useSelector } from "react-redux";
-import  notificationSlice  from "../../redux/notificationSlice";
+import  notificationSlice from "../../redux/notificationSlice";
+import  updatedOrderDetailSlice from "../../redux/updatedOrderDetailSlice";
 import { v4 as uuidv4 } from 'uuid';
 
 const Topbar = () => {
@@ -57,6 +58,37 @@ const Topbar = () => {
     );
   };
 
+  const addUpdatedItemOrderDetail = (response) => {
+    const tableId = response.data.tableId
+    const orderDetails = response.data.orderDetails
+    const item = {
+      tableId: tableId,
+      products: [
+
+      ],
+      combos: [
+
+      ]
+    }
+    orderDetails.forEach(orderDetail => {
+      if( orderDetail.combo !== null ) {
+        item.combos.push({
+          id: orderDetail.combo.id,
+          quantity: orderDetail.quantity
+        })
+      }
+      if( orderDetail.product !== null ) {
+        item.products.push({
+          id: orderDetail.product.id,
+          quantity: orderDetail.quantity
+        })
+      } 
+    })
+    dispatch(
+      updatedOrderDetailSlice.actions.addUpdatedOrderDetail(item)
+    )
+  }
+
   const getNotificationContent = (wsDataRespone) => {
     if (wsDataRespone.message === "NEW_OFFLINE_ORDER") {
       return {
@@ -65,15 +97,16 @@ const Topbar = () => {
       }
     }
     if (wsDataRespone.message === "ADD_ORDER_DETAIL") {
+      addUpdatedItemOrderDetail(wsDataRespone)
       return {
         content: `Table ${wsDataRespone.data.name} has been add new foods`,
-        route: '' // TODO modify path here
+        route: `/tableManagement/viewOrderDetail/${wsDataRespone.data.id}`
       }
     }
     if (wsDataRespone.message === "CALL_STAFF") {
       return {
         content: `Client at table ${wsDataRespone.data.name} calling...`,
-        route: '' // TODO modify path here
+        route: '#' // TODO modify path here
       }
     }
   }
@@ -85,6 +118,7 @@ const Topbar = () => {
       console.log('Connected: ' + frame);
       stompClient.subscribe('/topic/notify', (response) => {
         const data = JSON.parse(response.body);
+        console.log('data:', data);
         const contentRoute = getNotificationContent(data)
         const notificationDataToStoreInRedux = {
           id: uuidv4(),
@@ -92,8 +126,9 @@ const Topbar = () => {
           content: contentRoute.content,
           route: contentRoute.route
         }
+          
         incrementNotification(notificationDataToStoreInRedux)
-        setNotificationData(data)
+        setNotificationData(notificationDataToStoreInRedux)
         setOpenAlert(true)
       });
     });
@@ -111,6 +146,7 @@ const Topbar = () => {
         <PopupNotification
           notificationData={notificationData}
           onCloseSnackbar={handleCloseAlert}
+          handleClickCheck={deleteNotification}
         />
       </Snackbar>
 

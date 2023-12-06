@@ -26,7 +26,6 @@ const FormAddProduct = (props) => {
         if (e.target.name === "images") {
             const file = e.target.files[0];
             if (file.type.startsWith('image/')) {
-                console.log(file);
                 setProduct({ ...product, [e.target.name]: file });
             } else {
                 alert('Vui lòng chọn một file hình ảnh');
@@ -97,7 +96,6 @@ const FormAddProduct = (props) => {
             })
     }
 
-    console.log(product);
 
     return (
         <Box mt="20px">
