@@ -99,8 +99,8 @@ const Topbar = () => {
     if (wsDataRespone.message === "ADD_ORDER_DETAIL") {
       addUpdatedItemOrderDetail(wsDataRespone)
       return {
-        content: `Table ${wsDataRespone.data.name} has been add new foods`,
-        route: `/tableManagement/viewOrderDetail/${wsDataRespone.data.id}`
+        content: `Table ${wsDataRespone.data.tableName} has been add new foods`,
+        route: `/tableManagement/viewOrderDetail/${wsDataRespone.data.tableId}`
       }
     }
     if (wsDataRespone.message === "CALL_STAFF") {
