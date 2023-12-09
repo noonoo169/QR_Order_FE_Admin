@@ -1,12 +1,12 @@
 import axios from "axios";
+import getHeaders from "./headers";
 
 const API_URL = process.env.REACT_APP_BE_URL
 
+const headers = getHeaders();
+
 class OrderService {
 
-    saveCategory(category) {
-        return axios.post(API_URL + "/api/category/add", category);
-    }
     getAllOrderOffline() {
         return axios.get(API_URL + "/api/order/offlineOrders");
     }
@@ -16,11 +16,11 @@ class OrderService {
     }
 
     confirmDoneOrder(idOrder) {
-        return axios.put(API_URL + "/api/order/confirmDoneOrderOfTable/" + idOrder)
+        return axios.put(API_URL + "/api/order/confirmDoneOrderOfTable/" + idOrder, null, { headers })
     }
 
     updateStatusOrder(idOrder, statusOrder) {
-        return axios.put(API_URL + "/api/order/updateStatusOrder/" + idOrder, { orderStatus: statusOrder });
+        return axios.put(API_URL + "/api/order/updateStatusOrder/" + idOrder, { orderStatus: statusOrder }, { headers });
     }
 
     updateCategory(id, nameCategory) {

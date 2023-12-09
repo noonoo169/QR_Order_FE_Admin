@@ -41,7 +41,8 @@ const FormAddTable = (props) => {
                 props.handleRefreshTable();
             })
             .catch((error) => {
-                alert(error.response.data);
+                //alert(error.response.data);
+                console.log(error);
             })
     }
 

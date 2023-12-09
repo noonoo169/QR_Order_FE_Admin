@@ -4,17 +4,17 @@ import AddIcon from '@mui/icons-material/Add';
 import { useState } from "react";
 import { tokens } from "../theme";
 import Header from "./Header";
-import categoryService from "../service/categoryService";
+import adminActionService from "../service/adminActionService";
 
-const FormAddCategory = (props) => {
+const FormAddStaff = (props) => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [open, setOpen] = useState(false);
-    const [category, setCategory] = useState({});
+    const [staff, setStaff] = useState({});
 
     const handleChange = (e) => {
         const value = e.target.value;
-        setCategory({ ...category, [e.target.name]: value });
+        setStaff({ ...staff, [e.target.name]: value });
     }
 
     const handleClickOpen = () => {
@@ -22,20 +22,22 @@ const FormAddCategory = (props) => {
     };
 
     const handleClose = () => {
+        setStaff({
+            email: "",
+            name: "",
+            password: ""
+        })
         setOpen(false);
     };
 
     const handleAddSuccess = (e) => {
         e.preventDefault();
-        categoryService
-            .saveCategory(category)
+        adminActionService
+            .createAccountForStaff(staff)
             .then((res) => {
-                console.log("Category Add Sucessfully");
-                setCategory({
-                    name: ""
-                })
+                console.log("Staff Add Sucessfully");
                 handleClose();
-                props.handleRefreshCategory();
+                props.handleRefreshUser();
             })
             .catch((error) => {
                 //alert(error.response.data);
@@ -45,15 +47,12 @@ const FormAddCategory = (props) => {
 
     return (
         <Box mt="20px">
-            <Header
-                title="CATEGORY MANAGEMENT"
-                subtitle="List of Category for Future Reference"
-            />
+            <Header title="TEAM" subtitle="Managing the Team Members" />
             <Box>
-                <Button variant="contained" onClick={handleClickOpen} size="large" startIcon={<AddIcon />} sx={{ backgroundColor: colors.blueAccent[500] }}>Add Category</Button>
+                <Button variant="contained" onClick={handleClickOpen} size="large" startIcon={<AddIcon />} sx={{ backgroundColor: colors.blueAccent[500] }}>Add Staff</Button>
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>
-                        <Typography variant="h2" component='div'>Add Category</Typography>
+                        <Typography variant="h2" component='div'>Add Staff</Typography>
                     </DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -65,15 +64,39 @@ const FormAddCategory = (props) => {
                                 type="text"
                                 variant='outlined'
                                 color='secondary'
-                                label="Category Name"
+                                label="Email"
                                 fullWidth
                                 required
                                 sx={{ mb: 3 }}
-                                name="name"
+                                name="email"
                                 onChange={(e) => handleChange(e)}
-                                value={category.name}
+                                value={staff.email}
                             />
-                            <Button variant="outlined" color="secondary" type="submit">Add Category</Button>
+                            <TextField
+                                type="text"
+                                variant='outlined'
+                                color='secondary'
+                                label="UserName"
+                                fullWidth
+                                required
+                                sx={{ mb: 3 }}
+                                name="username"
+                                onChange={(e) => handleChange(e)}
+                                value={staff.username}
+                            />
+                            <TextField
+                                type="text"
+                                variant='outlined'
+                                color='secondary'
+                                label="Password"
+                                fullWidth
+                                required
+                                sx={{ mb: 3 }}
+                                name="password"
+                                onChange={(e) => handleChange(e)}
+                                value={staff.password}
+                            />
+                            <Button variant="outlined" color="secondary" type="submit">Add Staff</Button>
                         </Box>
                     </DialogContent>
                     <DialogActions>
@@ -85,4 +108,4 @@ const FormAddCategory = (props) => {
     )
 }
 
-export default FormAddCategory;
+export default FormAddStaff;

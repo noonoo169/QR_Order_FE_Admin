@@ -14,6 +14,8 @@ import OfflineOrderManagement from './scenes/OfflineOrderManagement/OfflineOrder
 import Login from './scenes/Login/Login';
 import Combo from './scenes/Combo/Combo';
 import { useState } from 'react';
+import ViewOnlineOrderDetail from './scenes/ViewOnlineOrderDetail/ViewOnlineOrderDetail'
+import TeamManagement from './scenes/Team/TeamManagement';
 
 
 function App() {
@@ -21,6 +23,7 @@ function App() {
   const [isLogin, setIsLogin] = useState(localStorage.getItem("accessToken"));
   const handleLogin = () => {
     setIsLogin(true);
+    window.location.reload();
   }
   console.log(isLogin);
   return (
@@ -46,6 +49,8 @@ function App() {
                       <Route path='offlineOrderManagement' element={<OfflineOrderManagement />} />
                       <Route path='/onlineOrderManagement' element={<OnlineOrderManagement />} />
                       <Route path='/viewDetailProduct/:id' element={<ViewProduct />} />
+                      <Route path='/viewOnlineOrderDetail/:id' element={<ViewOnlineOrderDetail />} />
+                      <Route path='/teamManagement' element={<TeamManagement />} />
                     </Routes>
                   </main>
                 </div>

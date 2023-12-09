@@ -49,7 +49,7 @@ export default function Login(props) {
         event.preventDefault();
         loginService.login(login)
             .then((res) => {
-                const token = res.data.accessToken;
+                const token = res.data.accessToken; 
                 console.log(token);
                 localStorage.setItem('accessToken', token);
                 props.login();
