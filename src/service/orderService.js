@@ -8,7 +8,7 @@ const headers = getHeaders();
 class OrderService {
 
     getAllOrderOffline() {
-        return axios.get(API_URL + "/api/order/offlineOrders");
+        return axios.get(API_URL + "/api/order/offlineOrders", { headers });
     }
 
     getOrderByIdTable(idTable) {
