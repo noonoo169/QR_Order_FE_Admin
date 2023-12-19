@@ -42,7 +42,7 @@ const Category = () => {
                                 <CardMedia
                                     component="img"
                                     height="140"
-                                    image={imgCategory[index].img}
+                                    image={imgCategory[index] === undefined ? "https://cubes-asia.com/wp-content/uploads/2021/12/cafe-Americano-1.jpg" : imgCategory[index].img}
                                     alt="green iguana"
                                     style={{ borderRadius: "5px" }}
                                 />

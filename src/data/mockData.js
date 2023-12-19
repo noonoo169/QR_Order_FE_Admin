@@ -317,5 +317,5 @@ export const imgCategory = [
     {
         id: 12,
         img: "https://media.loveitopcdn.com/1229/tra-xanh-la-gi-11.jpg"
-    },
+    }
 ]

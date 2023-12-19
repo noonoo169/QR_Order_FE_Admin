@@ -13,8 +13,9 @@ import { useContext } from "react";
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
-import {tokens } from "../../theme";
+import { tokens } from "../../theme";
 import { ThemeProvider } from '@emotion/react';
+import Header from "../../components/Header";
 
 function Copyright(props) {
     return (
@@ -54,7 +55,7 @@ export default function Dashboard() {
                         overflow: 'auto',
                     }}
                 >
-                    <Toolbar />
+                    <h2 style={{ textAlign: 'center', marginTop: "20px", color: colors.redAccent[500], fontWeight: 'bold' }}>DASHBOARD</h2>
                     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
                         <Grid container spacing={3}>
                             {/* Chart */}

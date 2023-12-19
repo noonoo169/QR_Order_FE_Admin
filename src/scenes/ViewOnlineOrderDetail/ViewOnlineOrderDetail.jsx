@@ -51,7 +51,7 @@ const ViewOnlineOrderDetail = () => {
     }
 
     const handleComfirmDoneOrder = () => {
-        orderService.confirmDoneOrder(order.id)
+        orderOnlineService.confirmDoneOrder(order.id)
             .then((res) => {
                 navigate("/onlineOrderManagement");
             })
@@ -103,7 +103,6 @@ const ViewOnlineOrderDetail = () => {
                                             <option value="IN_PROGRESS">IN_PROGRESS</option>
                                             <option value="SHIPPING">SHIPPING</option>
                                             <option value="CANCELLED">CANCELLED</option>
-                                            <option value="DONE">DONE</option>
                                         </select>
                                     </div>
                                     <div className="d-flex">
@@ -192,7 +191,7 @@ const ViewOnlineOrderDetail = () => {
                                             San Francisco, CA 94103<br />
                                             <abbr title="Phone">P:</abbr> (123) 456-7890
                                         </address>
-                                        {/* <Button variant='contained' sx={{ marginRight: 2 }} onClick={handleComfirmDoneOrder}>Comfirm</Button> */}
+                                        <Button variant='contained' sx={{ marginRight: 2 }} onClick={handleComfirmDoneOrder}>Comfirm</Button>
                                         <Button variant='contained' color="secondary" onClick={() => navigate("/onlineOrderManagement")}>Back</Button>
                                     </div>
                                 </div>

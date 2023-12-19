@@ -13,6 +13,11 @@ class OrderOnlineService {
         return axios.get(API_URL + "/api/order/onlineOrder/" + id);
     }
 
+    confirmDoneOrder(idOrder) {
+        console.log(idOrder);
+        return axios.put(API_URL + "/api/order/comfirmDoneOnlineOrder/" + idOrder, null, { headers })
+    }
+
 }
 
 const orderOnlineService = new OrderOnlineService();

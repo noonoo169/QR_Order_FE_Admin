@@ -12,6 +12,7 @@ import DeleteDialog from "../../components/DeleteDialog"
 import LockResetIcon from '@mui/icons-material/LockReset';
 
 
+
 const TeamManagement = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -102,18 +103,19 @@ const TeamManagement = () => {
       headerName: 'Actions',
       flex: 1.5,
       renderCell: (params) => (
-        <div style={{ display: 'flex' }}>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={() => resetPassword(params.row.username)}
-            sx={{ marginRight: 1 }}
-            startIcon={<LockResetIcon />}
-          >
-            Reset Password
-          </Button>
-          <DeleteDialog name="user" username={params.row.username} handleRefreshUser={init} />
-        </div>
+        params.row.username === "admin" ? <></> :
+          <div style={{ display: 'flex' }}>
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => resetPassword(params.row.username)}
+              sx={{ marginRight: 1 }}
+              startIcon={<LockResetIcon />}
+            >
+              Reset Password
+            </Button>
+            <DeleteDialog name="user" username={params.row.username} handleRefreshUser={init} />
+          </div>
       ),
     },
   ];

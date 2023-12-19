@@ -10,6 +10,10 @@ class UserService {
         return axios.get(API_URL + "/api/user/allUsers", { headers });
     }
 
+    getRoleByUsername(username) {
+        return axios.get(API_URL + "/api/user/getRoleByUsername?username=" + username);
+    }
+
 }
 
 const userService = new UserService();

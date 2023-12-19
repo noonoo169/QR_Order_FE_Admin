@@ -12,13 +12,10 @@ class TableService {
         return axios.get(API_URL + "/api/table/");
     }
 
-    updateCategory(id, nameCategory) {
-        return axios.put(API_URL + `/api/category/update/${id}?name=${encodeURIComponent(nameCategory)}`);
+    getNameTableById(idTable) {
+        return axios.get(API_URL + `/api/table/${idTable}`);
     }
 
-    deleleCategory(id) {
-        return axios.delete(API_URL + "/api/category/delete/" + id)
-    }
 }
 
 const tableService = new TableService();

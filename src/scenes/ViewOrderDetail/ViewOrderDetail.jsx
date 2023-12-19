@@ -8,7 +8,7 @@ import orderSerive from '../../service/orderService';
 import { tokens } from "../../theme";
 import { useDispatch, useSelector } from "react-redux";
 import CheckIcon from '@mui/icons-material/Check';
-import  updatedOrderDetailSlice from "../../redux/updatedOrderDetailSlice";
+import updatedOrderDetailSlice from "../../redux/updatedOrderDetailSlice";
 import { tab } from '@testing-library/user-event/dist/tab';
 
 const ViewOrderDetail = () => {
@@ -18,6 +18,7 @@ const ViewOrderDetail = () => {
         orderTime: [],
         orderDetails: []
     });
+    const [paymentMethod, setPaymentMethod] = useState("notpayment");
 
     const { id } = useParams();
     const navigate = useNavigate();
@@ -53,15 +54,20 @@ const ViewOrderDetail = () => {
         return `${currentDay}/${currentMonth}/${currentYear} ${currentHours}:${currentMinutes}:${currentSeconds}`;
 
     }
-
+    console.log(paymentMethod);
     const handleComfirmDoneOrder = () => {
-        orderService.confirmDoneOrder(order.id)
-            .then((res) => {
-                navigate("/tableManagement");
-            })
-            .catch(error => {
-                console.log(error);
-            })
+        if (paymentMethod === "notpayment") {
+            alert("Payment method has not been selected")
+        }
+        else {
+            orderService.confirmDoneOrder(order.id, paymentMethod)
+                .then((res) => {
+                    navigate("/tableManagement");
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
     }
 
     const handleChange = (e) => {
@@ -75,20 +81,24 @@ const ViewOrderDetail = () => {
             });
 
     }
+    const handleChangePayment = (e) => {
+        const value = e.target.value;
+        setPaymentMethod(value);
+    }
 
     // Check if food is extra here
     const dispatch = useDispatch()
     const updatedOrderDetails = useSelector((state) => state.updatedOrderDetails.tables)
-    
+
     const isExtraItem = (item, tableId) => {
         const updatedOrderDetail = updatedOrderDetails.find(updatedOrderDetail => updatedOrderDetail.tableId === tableId)
         console.log('updatedOrderDetail:', updatedOrderDetail);
-        if(updatedOrderDetail) {
+        if (updatedOrderDetail) {
             if (item.product !== null) {
                 return updatedOrderDetail.products.some(product => product.id === item.product.id);
-              }
+            }
             if (item.combo !== null) {
-            return updatedOrderDetail.combos.some(combo => combo.id === item.combo.id);
+                return updatedOrderDetail.combos.some(combo => combo.id === item.combo.id);
             }
             return false;
         }
@@ -132,7 +142,6 @@ const ViewOrderDetail = () => {
                                         >
                                             <option value="PENDING">PENDING</option>
                                             <option value="IN_PROGRESS">IN_PROGRESS</option>
-                                            <option value="SHIPPING">SHIPPING</option>
                                             <option value="CANCELLED">CANCELLED</option>
                                         </select>
                                     </div>
@@ -183,12 +192,12 @@ const ViewOrderDetail = () => {
                                                             {
                                                                 isExtraItem(element, order.tableId) ? (
                                                                     <IconButton color='primary' onClick={() => handleCheckExtraFood(element, order.tableId)}>
-                                                                        <CheckIcon/>
+                                                                        <CheckIcon />
                                                                     </IconButton>
                                                                 ) : ("")
                                                             }
 
-                                                            
+
                                                         </td>
                                                     </tr>
                                                 )
@@ -222,8 +231,18 @@ const ViewOrderDetail = () => {
                                 <div className="row">
                                     <div className="col-lg-6">
                                         <h3 className="h6">Payment Method</h3>
-                                        <p>{order.paymentMethod || "Trả bằng tiền mặt"}<br />
+                                        <p>{paymentMethod === "notpayment" ? "Choose a payment method" : paymentMethod}<br />
                                             Total: {order.totalPrice} <span className="badge bg-danger rounded-pill">UNPAID</span></p>
+                                        <select
+                                            className="form-select badge bg-success"
+                                            style={{ color: 'white', backgroundColor: '#17a2b8', width: "150px" }}
+                                            value={paymentMethod}
+                                            onChange={handleChangePayment}
+                                        >
+                                            <option value="notpayment">Payment Method</option>
+                                            <option value="CASH">CASH</option>
+                                            <option value="BANKING">BANKING</option>
+                                        </select>
                                     </div>
                                     <div className="col-lg-6">
                                         <h3 className="h6">Billing address</h3>

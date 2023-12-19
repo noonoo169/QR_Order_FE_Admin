@@ -32,17 +32,31 @@ const FormAddStaff = (props) => {
 
     const handleAddSuccess = (e) => {
         e.preventDefault();
-        adminActionService
-            .createAccountForStaff(staff)
-            .then((res) => {
-                console.log("Staff Add Sucessfully");
-                handleClose();
-                props.handleRefreshUser();
-            })
-            .catch((error) => {
-                //alert(error.response.data);
-                console.log(error)
-            })
+
+        if (validateEmail(staff.email)) {
+            adminActionService
+                .createAccountForStaff(staff)
+                .then((res) => {
+                    console.log("Staff Add Sucessfully");
+                    handleClose();
+                    props.handleRefreshUser();
+                })
+                .catch((error) => {
+                    //alert(error.response.data);
+                    console.log(error)
+                })
+        }
+        else {
+            alert("The email you entered is not valid")
+        }
+    }
+
+    const validateEmail = (email) => {
+        // Biểu thức chính quy để kiểm tra địa chỉ email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        // Sử dụng test() để kiểm tra tính hợp lệ của email
+        return emailRegex.test(email);
     }
 
     return (

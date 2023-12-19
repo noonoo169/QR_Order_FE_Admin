@@ -114,7 +114,7 @@ const OnlineOrderManagement = () => {
         <Box m="20px">
             <Header
                 title="ONLINE ORDER MANAGEMENT"
-                subtitle="List of Contacts for Future Reference"
+                subtitle="List of Order for Future Reference"
             />
             <Box
                 m="40px 0 0 0"
