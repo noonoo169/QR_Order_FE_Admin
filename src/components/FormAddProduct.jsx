@@ -92,7 +92,8 @@ const FormAddProduct = (props) => {
                 props.handleRefreshProduct()
             })
             .catch(error => {
-                console.log(error);
+                //console.log(error);
+                alert("Dữ liệu nhập không hợp lệ");
             })
     }
 

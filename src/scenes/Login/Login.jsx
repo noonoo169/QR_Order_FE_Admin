@@ -14,6 +14,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import loginService from '../../service/loginService';
+import userService from '../../service/userService';
 
 function Copyright(props) {
     return (
@@ -51,13 +52,36 @@ export default function Login(props) {
             .then((res) => {
                 const token = res.data.accessToken;
                 console.log(token);
-                localStorage.setItem('accessToken', token);
-                props.login();
+                userService.getRoleByUsername(login.username)
+                    .then(res => {
+                        if (findUserRole(res.data) === "customer") {
+                            alert("You do not have access");
+                        }
+                        else {
+                            localStorage.setItem('accessToken', token);
+                            localStorage.setItem('role', findUserRole(res.data));
+                            props.login();
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
             })
             .catch((error) => {
                 alert(error.response.data);
             })
     };
+
+    const findUserRole = (roles) => {
+        if (roles.includes("ADMIN")) {
+            return "admin";
+        } else if (roles.includes("STAFF")) {
+            return "staff";
+        } else if (roles.includes("CUSTOMER")) {
+            return "customer";
+        }
+    }
 
     return (
         <ThemeProvider theme={defaultTheme}>

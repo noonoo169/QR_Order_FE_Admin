@@ -1,12 +1,3 @@
-import tableImageOne from './img/TableOne.jpg';
-import tableImageTwo from './img/TableTwo.jpg';
-import tableImageThree from './img/TableThree.jpg';
-import tableImageFour from './img/TableFour.jpg';
-import tableImageFive from './img/TableFive.jpg';
-import tableImageSix from './img/TableSix.jpg';
-import tableImageSeven from './img/TableSeven.jpg';
-import tableImageEight from './img/TableEight.jpg';
-import tableImageNine from './img/TableNine.jpg';
 
 
 export const mockDataTeam = [
@@ -280,53 +271,6 @@ export const mockDataContacts = [
     },
 ];
 
-export const mockDataTable = [
-    {
-        id: 1,
-        name: "Table One",
-        img: tableImageOne
-    },
-    {
-        id: 2,
-        name: "Table Two",
-        img: tableImageTwo
-    },
-    {
-        id: 3,
-        name: "Table Three",
-        img: tableImageThree
-    },
-    {
-        id: 4,
-        name: "Table Four",
-        img: tableImageFour
-    },
-    {
-        id: 5,
-        name: "Table Five",
-        img: tableImageFive
-    },
-    {
-        id: 6,
-        name: "Table Six",
-        img: tableImageSix
-    },
-    {
-        id: 7,
-        name: "Table Seven",
-        img: tableImageSeven
-    },
-    {
-        id: 8,
-        name: "Table Eight",
-        img: tableImageEight
-    },
-    {
-        id: 9,
-        name: "Table Nine",
-        img: tableImageNine
-    },
-]
 
 
 export const imgCategory = [
@@ -373,5 +317,5 @@ export const imgCategory = [
     {
         id: 12,
         img: "https://media.loveitopcdn.com/1229/tra-xanh-la-gi-11.jpg"
-    },
+    }
 ]

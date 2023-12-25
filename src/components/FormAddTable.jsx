@@ -41,7 +41,8 @@ const FormAddTable = (props) => {
                 props.handleRefreshTable();
             })
             .catch((error) => {
-                alert(error.response.data);
+                //alert(error.response.data);
+                console.log(error);
             })
     }
 
@@ -50,7 +51,7 @@ const FormAddTable = (props) => {
         <Box mt="20px">
             <Header
                 title="TABLE MANAGEMENT"
-                subtitle="List of Category for Future Reference"
+                subtitle="List of Table for Future Reference"
             />
             <Box>
                 <Button variant="contained" onClick={handleClickOpen} size="large" startIcon={<AddIcon />} sx={{ backgroundColor: colors.blueAccent[500] }}>Add Table</Button>

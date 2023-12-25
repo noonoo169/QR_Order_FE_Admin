@@ -1,24 +1,20 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from "react-router-dom";
-import './ViewOrderDetail.css';
-import { IconButton, useTheme } from "@mui/material";
+import './ViewOnlineOrderDetail.css';
+import { useTheme } from "@mui/material";
 import orderService from "../../service/orderService";
 import { Button } from '@mui/material';
-import orderSerive from '../../service/orderService';
+import orderOnlineService from '../../service/orderOnlineService';
 import { tokens } from "../../theme";
-import { useDispatch, useSelector } from "react-redux";
-import CheckIcon from '@mui/icons-material/Check';
-import updatedOrderDetailSlice from "../../redux/updatedOrderDetailSlice";
-import { tab } from '@testing-library/user-event/dist/tab';
 
-const ViewOrderDetail = () => {
+const ViewOnlineOrderDetail = () => {
+
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
     const [order, setOrder] = useState({
         orderTime: [],
         orderDetails: []
     });
-    const [paymentMethod, setPaymentMethod] = useState("notpayment");
 
     const { id } = useParams();
     const navigate = useNavigate();
@@ -29,10 +25,9 @@ const ViewOrderDetail = () => {
     }, [])
 
     const init = () => {
-        orderService.getOrderByIdTable(id)
+        orderOnlineService.getOnlineOrderById(id)
             .then((res) => {
                 setOrder(res.data);
-                console.log(res.data);
             })
             .catch((error) => {
                 console.log(error);
@@ -54,26 +49,21 @@ const ViewOrderDetail = () => {
         return `${currentDay}/${currentMonth}/${currentYear} ${currentHours}:${currentMinutes}:${currentSeconds}`;
 
     }
-    console.log(paymentMethod);
+
     const handleComfirmDoneOrder = () => {
-        if (paymentMethod === "notpayment") {
-            alert("Payment method has not been selected")
-        }
-        else {
-            orderService.confirmDoneOrder(order.id, paymentMethod)
-                .then((res) => {
-                    navigate("/tableManagement");
-                })
-                .catch(error => {
-                    console.log(error);
-                })
-        }
+        orderOnlineService.confirmDoneOrder(order.id)
+            .then((res) => {
+                navigate("/onlineOrderManagement");
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     const handleChange = (e) => {
         order.orderStatus = e.target.value;
         setOrder(order);
-        orderSerive.updateStatusOrder(order.id, order.orderStatus)
+        orderService.updateStatusOrder(order.id, order.orderStatus)
             .then(res => {
                 init();
             }).catch(error => {
@@ -81,39 +71,8 @@ const ViewOrderDetail = () => {
             });
 
     }
-    const handleChangePayment = (e) => {
-        const value = e.target.value;
-        setPaymentMethod(value);
-    }
 
-    // Check if food is extra here
-    const dispatch = useDispatch()
-    const updatedOrderDetails = useSelector((state) => state.updatedOrderDetails.tables)
-
-    const isExtraItem = (item, tableId) => {
-        const updatedOrderDetail = updatedOrderDetails.find(updatedOrderDetail => updatedOrderDetail.tableId === tableId)
-        console.log('updatedOrderDetail:', updatedOrderDetail);
-        if (updatedOrderDetail) {
-            if (item.product !== null) {
-                return updatedOrderDetail.products.some(product => product.id === item.product.id);
-            }
-            if (item.combo !== null) {
-                return updatedOrderDetail.combos.some(combo => combo.id === item.combo.id);
-            }
-            return false;
-        }
-        return false
-    }
-
-    const handleCheckExtraFood = (item, tableId) => {
-        dispatch(updatedOrderDetailSlice.actions.deleteNotification({
-            item: item,
-            tableId: tableId
-        }))
-    }
-
-    // 
-
+    console.log(order);
     return (
         <div className="container-fluid" style={{ backgroundColor: colors.blueAccent[200] }}>
             <div className="container">
@@ -142,6 +101,7 @@ const ViewOrderDetail = () => {
                                         >
                                             <option value="PENDING">PENDING</option>
                                             <option value="IN_PROGRESS">IN_PROGRESS</option>
+                                            <option value="SHIPPING">SHIPPING</option>
                                             <option value="CANCELLED">CANCELLED</option>
                                         </select>
                                     </div>
@@ -163,10 +123,10 @@ const ViewOrderDetail = () => {
                                     <thead>
                                         <tr>
                                             <th>STT</th>
-                                            <th>Detail</th>
-                                            <th>Quantity</th>
+                                            <th>Chi tiết</th>
+                                            <th>Số lượng</th>
                                             <th className="text-end">Price</th>
-                                            <th className="text-end">Extra Food</th>
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -188,17 +148,6 @@ const ViewOrderDetail = () => {
                                                         </td>
                                                         <td>{element.quantity}</td>
                                                         <td className="text-end">{element.product ? element.product.price : element.combo.price}</td>
-                                                        <td className="text-end">
-                                                            {
-                                                                isExtraItem(element, order.tableId) ? (
-                                                                    <IconButton color='primary' onClick={() => handleCheckExtraFood(element, order.tableId)}>
-                                                                        <CheckIcon />
-                                                                    </IconButton>
-                                                                ) : ("")
-                                                            }
-
-
-                                                        </td>
                                                     </tr>
                                                 )
                                             })
@@ -231,18 +180,8 @@ const ViewOrderDetail = () => {
                                 <div className="row">
                                     <div className="col-lg-6">
                                         <h3 className="h6">Payment Method</h3>
-                                        <p>{paymentMethod === "notpayment" ? "Choose a payment method" : paymentMethod}<br />
+                                        <p>{order.paymentMethod || "Trả bằng tiền mặt"}<br />
                                             Total: {order.totalPrice} <span className="badge bg-danger rounded-pill">UNPAID</span></p>
-                                        <select
-                                            className="form-select badge bg-success"
-                                            style={{ color: 'white', backgroundColor: '#17a2b8', width: "150px" }}
-                                            value={paymentMethod}
-                                            onChange={handleChangePayment}
-                                        >
-                                            <option value="notpayment">Payment Method</option>
-                                            <option value="CASH">CASH</option>
-                                            <option value="BANKING">BANKING</option>
-                                        </select>
                                     </div>
                                     <div className="col-lg-6">
                                         <h3 className="h6">Billing address</h3>
@@ -253,7 +192,7 @@ const ViewOrderDetail = () => {
                                             <abbr title="Phone">P:</abbr> (123) 456-7890
                                         </address>
                                         <Button variant='contained' sx={{ marginRight: 2 }} onClick={handleComfirmDoneOrder}>Comfirm</Button>
-                                        <Button variant='contained' color="secondary" onClick={() => navigate("/tableManagement")}>Back</Button>
+                                        <Button variant='contained' color="secondary" onClick={() => navigate("/onlineOrderManagement")}>Back</Button>
                                     </div>
                                 </div>
                             </div>
@@ -270,16 +209,15 @@ const ViewOrderDetail = () => {
                         <div className="card mb-4">
                             {/* Shipping information */}
                             <div className="card-body">
-                                <h3 className="h6">Table Information</h3>
-                                <strong>Id Table: </strong>
-                                <span><a href="https://mui.com/" className="text-decoration-underline" target="_blank" rel="noreferrer">{order.tableId}</a> <i className="bi bi-box-arrow-up-right"></i> </span>
+                                <h3 className="h6">Shipping Information</h3>
+                                {/* <strong>Id Table: </strong> */}
+                                {/* <span><a href="https://mui.com/" className="text-decoration-underline" target="_blank" rel="noreferrer">{order.tableId}</a> <i className="bi bi-box-arrow-up-right"></i> </span> */}
                                 <hr />
                                 <h3 className="h6">Address</h3>
                                 <address>
-                                    {/* <strong>John Doe</strong><br /> */}
-                                    1355 Market St, Suite 900<br />
-                                    San Francisco, CA 94103<br />
-                                    <abbr title="Phone">P:</abbr> (123) 456-7890
+                                    <strong>{order.username}</strong><br />
+                                    {order.location}<br />
+                                    <abbr title="Phone">P:</abbr> {order.phoneNumber}
                                 </address>
                             </div>
                         </div>
@@ -288,8 +226,6 @@ const ViewOrderDetail = () => {
             </div>
         </div >
     );
-
-
 }
 
-export default ViewOrderDetail;
+export default ViewOnlineOrderDetail

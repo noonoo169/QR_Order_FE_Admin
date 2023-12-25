@@ -1,35 +1,28 @@
 import axios from "axios";
+import getHeaders from "./headers";
 
 const API_URL = process.env.REACT_APP_BE_URL
 
+const headers = getHeaders();
+
 class OrderService {
 
-    saveCategory(category) {
-        return axios.post(API_URL + "/api/category/add", category);
-    }
     getAllOrderOffline() {
-        return axios.get(API_URL + "/api/order/offlineOrders");
+        return axios.get(API_URL + "/api/order/offlineOrders", { headers });
     }
 
     getOrderByIdTable(idTable) {
         return axios.get(API_URL + "/api/order/getCurrentOrderOfTable/" + idTable);
     }
 
-    confirmDoneOrder(idOrder) {
-        return axios.put(API_URL + "/api/order/confirmDoneOrderOfTable/" + idOrder)
+    confirmDoneOrder(idOrder, paymentMethod) {
+        return axios.put(API_URL + `/api/order/confirmDoneOrderOfTable/${idOrder}?paymentMethod=${paymentMethod}`, null, { headers })
     }
 
     updateStatusOrder(idOrder, statusOrder) {
-        return axios.put(API_URL + "/api/order/updateStatusOrder/" + idOrder, { orderStatus: statusOrder });
+        return axios.put(API_URL + "/api/order/updateStatusOrder/" + idOrder, { orderStatus: statusOrder }, { headers });
     }
 
-    updateCategory(id, nameCategory) {
-        return axios.put(API_URL + `/api/category/update/${id}?name=${encodeURIComponent(nameCategory)}`);
-    }
-
-    deleleCategory(id) {
-        return axios.delete(API_URL + "/api/category/delete/" + id)
-    }
 }
 
 const orderSerive = new OrderService();

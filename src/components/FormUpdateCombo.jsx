@@ -1,17 +1,12 @@
 import { Box, Button, Dialog, DialogContent, DialogTitle, TextField, DialogActions, DialogContentText, Typography, Stack } from "@mui/material";
-import { useTheme } from "@emotion/react";
 import EditIcon from '@mui/icons-material/Edit';
 import { useEffect, useState } from "react";
-import { tokens } from "../theme";
 import MenuItem from '@mui/material/MenuItem';
 import productService from "../service/productService";
 import comboService from '../service/comboService';
 
 const FormUpdateCombo = (props) => {
 
-
-    const theme = useTheme();
-    const colors = tokens(theme.palette.mode);
     const [combo, setCombo] = useState({
         name: props.elementCombo.name,
         price: props.elementCombo.price,
@@ -47,37 +42,46 @@ const FormUpdateCombo = (props) => {
                 console.log(error);
             });
     };
-
+    
     const handleChange = (e) => {
         e.preventDefault();
         const value = e.target.value;
         const nameElement = e.target.name;
         if (!isNaN(nameElement)) {
+            const updatedDetailsProducts = [...combo.detailsProducts];
             if (combo.detailsProducts.length > nameElement) {
-                combo.detailsProducts[nameElement] = { productId: value, quantity: combo.detailsProducts[nameElement].quantity || 1 }
-                setCombo(combo);
+                updatedDetailsProducts[nameElement].productId = value;
             }
             else {
-                combo.detailsProducts.push({ productId: value, quantity: 1 })
-                setCombo(combo);
+                updatedDetailsProducts.push({ productId: value, quantity: 1 });
             }
+
+            setCombo((prevCombo) => ({
+                ...prevCombo,
+                detailsProducts: updatedDetailsProducts
+            }));
         }
         else if (nameElement.startsWith("numberOfProduct")) {
             const numberValue = parseInt(nameElement.substring("numberOfProduct".length), 10);
+            const updatedDetailsProducts = [...combo.detailsProducts];
             if (combo.detailsProducts.length > numberValue) {
-                combo.detailsProducts[numberValue] = { productId: combo.detailsProducts[numberValue].productId, quantity: value }
-                setCombo(combo);
+                updatedDetailsProducts[numberValue].quantity = value;
             }
             else {
-                combo.detailsProducts.push({ productId: "", quantity: value });
-                setCombo(combo);
+                updatedDetailsProducts.push({ productId: "", quantity: value });
             }
+            setCombo((prevCombo) => ({
+                ...prevCombo,
+                detailsProducts: updatedDetailsProducts
+            }));
         }
         else {
             setCombo({ ...combo, [e.target.name]: value });
         }
 
     }
+
+
 
     const handleClickOpen = () => {
         setOpen(true);

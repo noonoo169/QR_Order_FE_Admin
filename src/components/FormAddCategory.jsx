@@ -38,7 +38,8 @@ const FormAddCategory = (props) => {
                 props.handleRefreshCategory();
             })
             .catch((error) => {
-                alert(error.response.data);
+                //alert(error.response.data);
+                console.log(error)
             })
     }
 

@@ -1,10 +1,19 @@
 import axios from "axios";
+import getHeaders from "./headers";
 const API_URL = process.env.REACT_APP_BE_URL
+
+const headers = getHeaders();
 
 class ProductService {
 
     saveProduct(product) {
-        return axios.post(API_URL + "/api/product/add", product);
+        const accessToken = localStorage.getItem("accessToken");
+        return axios.post(API_URL + "/api/product/add", product, {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                "Content-Type": "multipart/form-data", 
+            },
+        });
     }
     getAllProduct() {
         return axios.get(API_URL + "/api/product");
@@ -22,7 +31,7 @@ class ProductService {
     }
 
     deleleProduct(id) {
-        return axios.delete(API_URL + "/api/product/delete/" + id)
+        return axios.delete(API_URL + "/api/product/delete/" + id, { headers })
     }
 }
 

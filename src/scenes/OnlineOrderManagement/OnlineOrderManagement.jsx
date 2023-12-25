@@ -1,11 +1,9 @@
 import { useTheme } from "@emotion/react";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { Box, Button } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { tokens } from "../../theme";
 import Header from "../../components/Header"
-import { mockDataContacts } from '../../data/mockData'
 import { Link } from "react-router-dom";
 import Status from "../../components/Status";
 import { useEffect, useState } from "react";
@@ -15,7 +13,6 @@ const OnlineOrderManagement = () => {
 
 
     const theme = useTheme();
-    const status = 'IN_PROGRESS';
     const colors = tokens(theme.palette.mode);
 
     const [orderOnlineList, setOrderOnlineList] = useState([]);
@@ -33,15 +30,22 @@ const OnlineOrderManagement = () => {
                         username: element.username,
                         phoneNumber: element.phoneNumber,
                         location: element.location,
+                        orderTime: handleDateTime(element.orderTime),
                         orderStatus: element.orderStatus,
-                        totalPrice: element.totalPrice
+                        totalPrice: element.totalPrice,
+                        paymentMethod: element.paymentMethod
                     }
-                });
+                }).reverse();
                 setOrderOnlineList(list);
             })
             .catch(error => {
                 console.log(error);
             })
+    }
+
+    const handleDateTime = (timeArray) => {
+        const dateTime = new Date(timeArray[0], timeArray[1] - 1, timeArray[2], timeArray[3], timeArray[4], timeArray[5]);
+        return dateTime;
     }
 
     console.log(orderOnlineList);
@@ -59,64 +63,47 @@ const OnlineOrderManagement = () => {
         {
             field: "location",
             headerName: "Location",
-            flex: 1,
-            cellClassName: "name-column--cell",
+            flex: 1.5,
         },
-
         {
             field: "orderStatus",
             headerName: "Order Status",
-            flex: 1,
+            flex: 2,
+            renderCell: (params) => (
+                <div>
+                    <Status status={params.row.orderStatus} />
+                </div>
+            ),
+        },
+        {
+            field: "orderTime",
+            headerName: "Order Time",
+            flex: 3.5,
         },
         {
             field: "totalPrice",
             headerName: "Total Price",
             flex: 1,
+            cellClassName: "name-column--cell",
         },
         {
-            field: "status",
-            headerName: "Status",
-            flex: 1.5,
-            align: "right",
-            renderCell: (params) => (
-                <div>
-                    <Status status={status} />
-                </div>
-            ),
-
+            field: "paymentMethod",
+            headerName: "Payment Method",
+            flex: 1,
         },
-        // {
-        //     field: "orderTime",
-        //     headerName: "Order Time",
-        //     flex: 1,
-
-        // },
         {
             field: 'actions',
             headerName: 'Actions',
-            width: 200,
+            flex: 1,
             renderCell: (params) => (
                 <div>
-                    {/* Nút View */}
                     <Button
                         variant="contained"
                         color="success"
                         startIcon={<VisibilityIcon />}
-                        component={Link} to="/viewOrderDetail"
-                    //onClick={() => handleViewClick(params.row.id)}    
+                        component={Link} to={"/viewOnlineOrderDetail/" + params.row.id}
                     >
                         View
-                    </Button>
-
-                    {/* Nút Delete */}
-                    <Button
-                        variant="contained"
-                        color="error"
-                        startIcon={<DeleteIcon />}
-                        sx={{ marginLeft: "8px" }}
-                    //onClick={() => handleDeleteClick(params.row.id)}
-                    >
-                        Delete
                     </Button>
                 </div>
             ),
@@ -127,7 +114,7 @@ const OnlineOrderManagement = () => {
         <Box m="20px">
             <Header
                 title="ONLINE ORDER MANAGEMENT"
-                subtitle="List of Contacts for Future Reference"
+                subtitle="List of Order for Future Reference"
             />
             <Box
                 m="40px 0 0 0"
@@ -164,7 +151,7 @@ const OnlineOrderManagement = () => {
                 <DataGrid
                     rows={orderOnlineList}
                     columns={columns}
-                //components={{ Toolbar: GridToolbar }}
+                    components={{ Toolbar: GridToolbar }}
                 />
             </Box>
         </Box>

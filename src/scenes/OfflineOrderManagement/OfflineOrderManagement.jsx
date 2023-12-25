@@ -22,29 +22,45 @@ const OfflineOrderManagement = () => {
     const [orderOfflineList, setOrderOfflineList] = useState([]);
 
     useEffect(() => {
-        init()
+        init();
     }, []);
 
     const init = () => {
         orderService.getAllOrderOffline()
             .then(res => {
-                const list = res.data.map(element => {
-                    return {
-                        id: element.id,
-                        tableId: element.tableId,
-                        note: element.note,
-                        timeOrder: handleDateTime(element.orderTime),
-                        totalPrice: element.totalPrice,
-                        orderStatus: element.orderStatus,
-                        paymentMethod: "Trả bằng tiền mặt"
-                    }
+                const promises = res.data.map(element => {
+                    return tableService.getNameTableById(element.tableId)
+                        .then(res => {
+                            const nameTable = res.data.name;
+                            return {
+                                id: element.id,
+                                tableId: nameTable,
+                                note: element.note,
+                                timeOrder: handleDateTime(element.orderTime),
+                                totalPrice: element.totalPrice,
+                                orderStatus: element.orderStatus,
+                                paymentMethod: element.paymentMethod
+                            };
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
                 });
-                setOrderOfflineList(list);
+
+                Promise.all(promises)
+                    .then(orderList => {
+                        setOrderOfflineList(orderList);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
             })
             .catch(error => {
                 console.log(error);
-            })
-    }
+            });
+    };
+
+
     console.log(orderOfflineList);
 
     const handleDateTime = (timeArray) => {

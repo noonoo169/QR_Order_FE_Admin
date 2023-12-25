@@ -5,6 +5,7 @@ import categoryService from "../service/categoryService";
 import productService from "../service/productService";
 import comboService from "../service/comboService";
 import commentService from "../service/commentService";
+import adminActionService from "../service/adminActionService";
 
 const DeleteDialog = (props) => {
 
@@ -71,9 +72,21 @@ const DeleteDialog = (props) => {
                         console.log(error);
                     });
                 break;
+            case "user":
+                adminActionService.deleteAccountUser(props.username)
+                    .then((res) => {
+                        console.log("Delete Success");
+                        props.handleRefreshUser();
+                        handleClose();
+                    })
+                    .catch((error) => {
+                        handleClose();
+                        console.log(error);
+                    });
+                break;
         }
     };
-    
+
     return (
         <Box>
             <Button variant="contained" onClick={handleClickOpen} color="error" size="medium" startIcon={<DeleteIcon />}>
