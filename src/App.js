@@ -15,6 +15,7 @@ import Login from './scenes/Login/Login';
 import Combo from './scenes/Combo/Combo';
 import { useState, createContext } from 'react';
 import ViewOnlineOrderDetail from './scenes/ViewOnlineOrderDetail/ViewOnlineOrderDetail'
+import Statistical from './scenes/Statistical/Statistical';
 import TeamManagement from './scenes/Team/TeamManagement';
 export const RoleContext = createContext();
 
@@ -52,6 +53,7 @@ function App() {
                         <Route path='/viewDetailProduct/:id' element={<ViewProduct />} />
                         <Route path='/viewOnlineOrderDetail/:id' element={<ViewOnlineOrderDetail />} />
                         <Route path='/teamManagement' element={<TeamManagement />} />
+                        <Route path='/statistical' element={<Statistical />} />
                       </Routes>
                     </main>
                   </div>

@@ -23,6 +23,10 @@ class OrderService {
         return axios.put(API_URL + "/api/order/updateStatusOrder/" + idOrder, { orderStatus: statusOrder }, { headers });
     }
 
+    getAllOrder() {
+        return axios.get(API_URL + "/api/order/getAllOrder");
+    }
+
 }
 
 const orderSerive = new OrderService();

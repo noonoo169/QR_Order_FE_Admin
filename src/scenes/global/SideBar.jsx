@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import { ProSidebar, Menu, MenuItem } from "react-pro-sidebar";
-import { Box, IconButton, Typography, useTheme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { Box, Button, IconButton, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 import "react-pro-sidebar/dist/css/styles.css";
 import { tokens } from "../../theme";
@@ -13,6 +14,8 @@ import { Category } from "@mui/icons-material";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import StorefrontIcon from '@mui/icons-material/Storefront';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import LogoutIcon from '@mui/icons-material/Logout';
 import avatar from './1.png'
 import { RoleContext } from "../../App";
 
@@ -40,6 +43,15 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [selected, setSelected] = useState("Dashboard");
   const role = useContext(RoleContext);
+  const navigate = useNavigate();
+
+  const handleLogOut = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("role");
+    navigate("/")
+    window.location.reload();
+  }
+
   return (
     <Box
       sx={{
@@ -147,13 +159,13 @@ const Sidebar = () => {
                     selected={selected}
                     setSelected={setSelected}
                   />
-                  <Item
+                  {/* <Item
                     title="Offline Order Management"
                     to="/offlineOrderManagement"
                     icon={<ShoppingCartIcon />}
                     selected={selected}
                     setSelected={setSelected}
-                  />
+                  /> */}
 
                   <Item
                     title="Online Order Management"
@@ -162,6 +174,15 @@ const Sidebar = () => {
                     selected={selected}
                     setSelected={setSelected}
                   />
+
+                  <Typography
+                    variant="h6"
+                    color={colors.grey[300]}
+                    sx={{ m: "15px 0 5px 20px" }}
+                  >
+                    Log out
+                  </Typography>
+                  <Button variant="contained" color="success" onClick={handleLogOut} startIcon={<LogoutIcon />} sx={{ marginLeft: 5, width: "70%" }}>Log out</Button>
                 </>
               ) : (
                 <>
@@ -238,13 +259,13 @@ const Sidebar = () => {
                     selected={selected}
                     setSelected={setSelected}
                   />
-                  <Item
+                  {/* <Item
                     title="Offline Order Management"
                     to="/offlineOrderManagement"
                     icon={<ShoppingCartIcon />}
                     selected={selected}
                     setSelected={setSelected}
-                  />
+                  /> */}
 
                   <Item
                     title="Online Order Management"
@@ -253,6 +274,22 @@ const Sidebar = () => {
                     selected={selected}
                     setSelected={setSelected}
                   />
+
+                  <Item
+                    title="Sales Revenue Management"
+                    to="/statistical"
+                    icon={<BarChartIcon />}
+                    selected={selected}
+                    setSelected={setSelected}
+                  />
+                  <Typography
+                    variant="h6"
+                    color={colors.grey[300]}
+                    sx={{ m: "15px 0 5px 20px" }}
+                  >
+                    Log out
+                  </Typography>
+                  <Button variant="contained" color="success" onClick={handleLogOut} startIcon={<LogoutIcon />} sx={{ marginLeft: 5, width: "70%" }}>Log out</Button>
                 </>
               )
             }

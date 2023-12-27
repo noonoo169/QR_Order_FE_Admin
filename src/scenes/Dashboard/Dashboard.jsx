@@ -2,20 +2,17 @@ import * as React from 'react';
 import { createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
 import { useTheme } from "@mui/material";
-import { useContext } from "react";
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import { tokens } from "../../theme";
 import { ThemeProvider } from '@emotion/react';
-import Header from "../../components/Header";
 
 function Copyright(props) {
     return (
@@ -48,7 +45,7 @@ export default function Dashboard() {
                     sx={{
                         backgroundColor: (theme) =>
                             theme.palette.mode === 'light'
-                                ? colors.blueAccent[300]
+                                ? colors.blueAccent[900]
                                 : theme.palette.grey[900],
                         flexGrow: 1,
                         height: '100vh',
