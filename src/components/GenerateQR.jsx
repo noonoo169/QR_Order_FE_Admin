@@ -12,7 +12,7 @@ export default function QRCodeGenerate(props) {
     const handleGenerateQrCode = async () => {
         try {
             const response = await axios.get(
-                `http://localhost:8080/api/QRCode/genrateQRCode/${urlWeb}/${props.idTable}/350/350`,
+                `https://qr-order-client.netlify.app/home/%7Btable_id?${props.idTable}/350/350`,
                 {
                     responseType: 'arraybuffer',
                 }

@@ -26,6 +26,9 @@ const FormAddTable = (props) => {
 
     const handleClose = () => {
         setOpen(false);
+        setTable({
+            tableName: ""
+        })
     };
 
     const handleAddSuccess = (e) => {
@@ -41,7 +44,7 @@ const FormAddTable = (props) => {
                 props.handleRefreshTable();
             })
             .catch((error) => {
-                //alert(error.response.data);
+                alert(error.response.data);
                 console.log(error);
             })
     }

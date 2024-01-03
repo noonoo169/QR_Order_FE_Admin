@@ -91,6 +91,7 @@ const formatDate = (date) => {
 
 
 const endDisplay = (orderList, startDate, endDate) => {
+    console.log(startDate, endDate);
     if (startDate > endDate) {
         alert('Nên nhập ngày bắt đầu phải trước hoặc bằng ngày kết thúc.');
     }

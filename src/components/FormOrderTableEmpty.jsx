@@ -6,8 +6,10 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DeleteDialog from '../components/DeleteDialog';
 import { useTheme } from "@emotion/react";
 import { tokens } from "../theme";
+import { Box } from '@mui/material';
 
 export default function FormOrderTableEmpty() {
     const [open, setOpen] = React.useState(false);
@@ -24,8 +26,8 @@ export default function FormOrderTableEmpty() {
     };
 
     return (
-        <React.Fragment>
-            <Button variant="contained" onClick={handleClickOpen} startIcon={<VisibilityIcon />} color='success'>
+        <Box>
+            <Button variant="contained" onClick={handleClickOpen} color='success' size="medium" sx={{ marginLeft: 1 }}>
                 View
             </Button>
             <Dialog
@@ -46,6 +48,8 @@ export default function FormOrderTableEmpty() {
                     <Button onClick={handleClose} sx={{ backgroundColor: colors.blueAccent[600] }}>OK</Button>
                 </DialogActions>
             </Dialog>
-        </React.Fragment>
+
+
+        </Box>
     );
 }

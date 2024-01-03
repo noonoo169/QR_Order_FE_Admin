@@ -26,16 +26,10 @@ const defaultTheme = createTheme();
 const Statistical = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [revenue, setRevenue] = useState("Date");
   const [valueFromDate, setValueFromDate] = useState(dayjs('2023-12-25'));
   const [valueToDate, setValueToDate] = useState(dayjs('2023-12-30'));
   const [orderList, setOrderList] = useState([]);
 
-
-  const handleChangeStatisticsFollow = (e) => {
-    const value = e.target.value;
-    setRevenue(value);
-  }
 
 
   useEffect(() => {

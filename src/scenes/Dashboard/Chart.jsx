@@ -20,15 +20,17 @@ const data = [
     createData('24:00', undefined),
 ];
 
-export default function Chart() {
+export default function Chart(props) {
     const theme = useTheme();
+
+    console.log(props.orderDisplay)
 
     return (
         <React.Fragment>
-            <Title>Today</Title>
+            <Title>Revenue in the last 7 days</Title>
             <ResponsiveContainer>
                 <LineChart
-                    data={data}
+                    data={props.orderDisplay}
                     margin={{
                         top: 16,
                         right: 16,
