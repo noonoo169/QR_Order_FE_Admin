@@ -90,19 +90,26 @@ const ViewOrderDetail = () => {
     const dispatch = useDispatch()
     const updatedOrderDetails = useSelector((state) => state.updatedOrderDetails.tables)
 
-    const isExtraItem = (item, tableId) => {
-        const updatedOrderDetail = updatedOrderDetails.find(updatedOrderDetail => updatedOrderDetail.tableId === tableId)
+    const findExtraItem = (item, tableId) => {
+        const updatedOrderDetail = updatedOrderDetails.find(detail => detail.tableId === tableId);
         console.log('updatedOrderDetail:', updatedOrderDetail);
+    
         if (updatedOrderDetail) {
             if (item.product !== null) {
-                return updatedOrderDetail.products.some(product => product.id === item.product.id);
+                const foundProduct = updatedOrderDetail.products.find(product => product.id === item.product.id);
+                return foundProduct || null; // Return found product or null if not found
             }
             if (item.combo !== null) {
-                return updatedOrderDetail.combos.some(combo => combo.id === item.combo.id);
+                const foundCombo = updatedOrderDetail.combos.find(combo => combo.id === item.combo.id);
+                return foundCombo || null; // Return found combo or null if not found
             }
-            return false;
         }
-        return false
+        return null; // Return null if updatedOrderDetail is not found or item is invalid
+    };
+    
+
+    const getExtraQuantity = () => {
+
     }
 
     const handleCheckExtraFood = (item, tableId) => {
@@ -167,11 +174,13 @@ const ViewOrderDetail = () => {
                                             <th>Quantity</th>
                                             <th className="text-end">Price</th>
                                             <th className="text-end">Extra Food</th>
+                                            <th className="text-end">Extra Quantity</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {
                                             order.orderDetails.map((element, index) => {
+                                                const extraItem = findExtraItem(element, order.tableId)
                                                 return (
                                                     <tr>
                                                         <td>{index + 1}</td>
@@ -190,14 +199,19 @@ const ViewOrderDetail = () => {
                                                         <td className="text-end">{element.product ? element.product.price : element.combo.price}</td>
                                                         <td className="text-end">
                                                             {
-                                                                isExtraItem(element, order.tableId) ? (
+                                                                extraItem ? (
                                                                     <IconButton color='primary' onClick={() => handleCheckExtraFood(element, order.tableId)}>
                                                                         <CheckIcon />
                                                                     </IconButton>
                                                                 ) : ("")
                                                             }
-
-
+                                                        </td>
+                                                        <td className="text-end">
+                                                            {
+                                                                extraItem ? (
+                                                                    extraItem.quantity
+                                                                ) : ("")
+                                                            }
                                                         </td>
                                                     </tr>
                                                 )
