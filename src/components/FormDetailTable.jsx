@@ -36,6 +36,9 @@ const FormDetailTable = (props) => {
                     <DialogContentText>
                         To subscribe to this website, You can optionally update, delete, and download the QR Code here.
                     </DialogContentText>
+                    <DialogContentText>
+                        <QRCodeGenerate idTable={props.id}/>
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <FormUpdateTable name={props.name} id={props.id} handleRefreshTable={props.handleRefreshTable} handleClose={handleClose} />
@@ -43,7 +46,6 @@ const FormDetailTable = (props) => {
                         props.status === "EMPTY" ? <DeleteDialog name="table" id={props.id} handleRefreshTable={props.handleRefreshTable} handleClose={handleClose} />
                             : <Box></Box>
                     }
-                    <QRCodeGenerate idTable={props.id} />
                     <Button variant="outlined" onClick={handleClose} startIcon={<CancelIcon />} color="error">Cancel</Button>
                 </DialogActions>
             </Dialog>
