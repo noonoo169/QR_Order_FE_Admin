@@ -4,7 +4,7 @@ import QrCodeIcon from '@mui/icons-material/QrCode';
 import QRCode from 'qrcode.react';
 
 const QRCodeGenerate = (props) => {
-    const urlWeb = `https://qr-order-client.netlify.app/home/%7Btable_id?${props.idTable}`
+    const urlWeb = `https://qr-order-client.netlify.app/home/${props.idTable}`
 
     const downloadQR = () => {
         const canvas = document.getElementById('qrcode');
