@@ -14,7 +14,6 @@ const FormDetailTable = (props) => {
     const [open, setOpen] = useState(false);
 
 
-
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -37,7 +36,7 @@ const FormDetailTable = (props) => {
                         To subscribe to this website, You can optionally update, delete, and download the QR Code here.
                     </DialogContentText>
                     <DialogContentText>
-                        <QRCodeGenerate idTable={props.id}/>
+                        <QRCodeGenerate table={props}/>
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>

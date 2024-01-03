@@ -4,19 +4,34 @@ import QrCodeIcon from '@mui/icons-material/QrCode';
 import QRCode from 'qrcode.react';
 
 const QRCodeGenerate = (props) => {
-    const urlWeb = `https://qr-order-client.netlify.app/home/${props.idTable}`
+    const urlWeb = `https://qr-order-client.netlify.app/home/${props.table.id}`
 
     const downloadQR = () => {
-        const canvas = document.getElementById('qrcode');
+        const qrImage = document.getElementById('qrcode');
+        const canvas = document.createElement('canvas');
+        canvas.width = qrImage.width;
+        canvas.height = qrImage.height;
+        const ctx = canvas.getContext('2d');
+
+        // Draw the QR code image onto the canvas
+        ctx.drawImage(qrImage, 0, 0);
+
+        // Overlay text on the QR code image
+        ctx.font = '30px Arial';
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Table: ${props.table.name}`, canvas.width / 2, canvas.height - 10);
+
+        // Trigger download of the canvas as an image
         const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-        console.log('pngUrl', pngUrl);
-        let downloadLink = document.createElement('a');
+        const downloadLink = document.createElement('a');
         downloadLink.href = pngUrl;
-        downloadLink.download = `idTable:${props.idTable}.png`;
+        downloadLink.download = `Table_QR_${props.table.name}.png`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
     };
+
 
     return (
         <Box>
@@ -24,9 +39,10 @@ const QRCodeGenerate = (props) => {
                 <QRCode
                     id='qrcode'
                     value={urlWeb}
-                    size={128}
-                    level={'H'}
+                    size={256}
+                    level={'L'}
                     includeMargin={true}
+
                 />
             </Box>
             <Button
@@ -36,7 +52,7 @@ const QRCodeGenerate = (props) => {
                 onClick={downloadQR}
                 startIcon={<QrCodeIcon />}
             >
-                Download QR Code
+                Download QR Code For Table {props.table.name}
             </Button>
 
         </Box>
