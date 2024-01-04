@@ -10,17 +10,15 @@ import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchIcon from "@mui/icons-material/Search";
 import Badge from '@mui/material/Badge';
 import BasicMenu from "./BasicMenu";
-import manageNotificationsService from "../../service/manageNotificationsService";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 import PopupNotification from "./PopupNotification";
 import { useDispatch, useSelector } from "react-redux";
-import  notificationSlice from "../../redux/notificationSlice";
-import  updatedOrderDetailSlice from "../../redux/updatedOrderDetailSlice";
+import notificationSlice from "../../redux/notificationSlice";
+import updatedOrderDetailSlice from "../../redux/updatedOrderDetailSlice";
 import { v4 as uuidv4 } from 'uuid';
-
+import Slide from '@mui/material/Slide';
 const Topbar = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
@@ -41,8 +39,9 @@ const Topbar = () => {
   // Notification
   const dispatch = useDispatch();
 
-  const [openAlert, setOpenAlert] = useState(false);
   const [notificationData, setNotificationData] = useState(null)
+  const [openAlert, setOpenAlert] = useState(false);
+
   const handleCloseAlert = () => {
     setOpenAlert(false)
   };
@@ -54,10 +53,11 @@ const Topbar = () => {
   };
   const deleteNotification = (id) => {
     dispatch(
-      notificationSlice.actions.deleteNotification({id})
+      notificationSlice.actions.deleteNotification({ id })
     );
   };
 
+  // save extra food to local storage 
   const addUpdatedItemOrderDetail = (response) => {
     const tableId = response.data.tableId
     const orderDetails = response.data.orderDetails
@@ -71,18 +71,18 @@ const Topbar = () => {
       ]
     }
     orderDetails.forEach(orderDetail => {
-      if( orderDetail.combo !== null ) {
+      if (orderDetail.combo !== null) {
         item.combos.push({
           id: orderDetail.combo.id,
           quantity: orderDetail.quantity
         })
       }
-      if( orderDetail.product !== null ) {
+      if (orderDetail.product !== null) {
         item.products.push({
           id: orderDetail.product.id,
           quantity: orderDetail.quantity
         })
-      } 
+      }
     })
     dispatch(
       updatedOrderDetailSlice.actions.addUpdatedOrderDetail(item)
@@ -92,7 +92,7 @@ const Topbar = () => {
   const getNotificationContent = (wsDataRespone) => {
     if (wsDataRespone.message === "NEW_OFFLINE_ORDER") {
       return {
-        content: `Table ${wsDataRespone.data.name} has been ordered`, 
+        content: `Table ${wsDataRespone.data.name} has been ordered`,
         route: `/tableManagement/viewOrderDetail/${wsDataRespone.data.id}`
       }
     }
@@ -107,6 +107,12 @@ const Topbar = () => {
       return {
         content: `Client at table ${wsDataRespone.data.name} calling...`,
         route: '#' // TODO modify path here
+      }
+    }
+    if (wsDataRespone.message === "NEW_ONLINE_ORDER") {
+      return {
+        content: `You have new online order`,
+        route: `/viewOnlineOrderDetail/${wsDataRespone.data.id}` // TODO modify path here
       }
     }
   }
@@ -126,7 +132,7 @@ const Topbar = () => {
           content: contentRoute.content,
           route: contentRoute.route
         }
-          
+
         incrementNotification(notificationDataToStoreInRedux)
         setNotificationData(notificationDataToStoreInRedux)
         setOpenAlert(true)
@@ -134,21 +140,30 @@ const Topbar = () => {
     });
   }, []);
 
-
   return (
 
     <Box display="flex" justifyContent="space-between" p={2}>
+
+      {/* Notify order */}
       <Snackbar
         open={openAlert}
         onClose={handleCloseAlert}
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        sx={{ width: '50%' }}>
+        sx={{
+          width: '50%',
+        }}
+        TransitionComponent={Slide}
+        TransitionProps={{
+          direction: 'down', // Slide direction
+        }}
+      >
         <PopupNotification
           notificationData={notificationData}
           onCloseSnackbar={handleCloseAlert}
           handleClickCheck={deleteNotification}
         />
       </Snackbar>
+
 
       {/* SEARCH BAR */}
       <Box
@@ -177,13 +192,6 @@ const Topbar = () => {
           </Badge>
         </IconButton>
         <BasicMenu open={open} anchorEl={anchorEl} handleClose={handleClose} handleClickCheck={deleteNotification} />
-
-        <IconButton>
-          <SettingsOutlinedIcon />
-        </IconButton>
-        <IconButton>
-          <PersonOutlinedIcon />
-        </IconButton>
       </Box>
     </Box>
   );
