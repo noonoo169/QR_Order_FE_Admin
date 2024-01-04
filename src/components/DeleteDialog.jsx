@@ -6,6 +6,7 @@ import productService from "../service/productService";
 import comboService from "../service/comboService";
 import commentService from "../service/commentService";
 import adminActionService from "../service/adminActionService";
+import tableService from "../service/tableService";
 
 const DeleteDialog = (props) => {
 
@@ -78,6 +79,20 @@ const DeleteDialog = (props) => {
                         console.log("Delete Success");
                         props.handleRefreshUser();
                         handleClose();
+                    })
+                    .catch((error) => {
+                        handleClose();
+                        console.log(error);
+                    });
+                break;
+            case "table":
+                console.log(props.id);
+                tableService.deleteTable(props.id)
+                    .then((res) => {
+                        console.log("Delete Success");
+                        props.handleRefreshTable();
+                        handleClose();
+                        props.handleClose();
                     })
                     .catch((error) => {
                         handleClose();

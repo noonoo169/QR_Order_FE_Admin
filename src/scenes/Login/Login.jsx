@@ -35,6 +35,7 @@ const defaultTheme = createTheme();
 
 export default function Login(props) {
 
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [login, setLogin] = useState({
         username: "",
         password: ""
@@ -44,10 +45,11 @@ export default function Login(props) {
         const value = e.target.value;
         setLogin({ ...login, [e.target.name]: value });
     }
-    console.log(login);
+    //console.log(login);
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setIsSubmitting((prevIsSubmitting) => !prevIsSubmitting);
         loginService.login(login)
             .then((res) => {
                 const token = res.data.accessToken;
@@ -62,16 +64,19 @@ export default function Login(props) {
                             localStorage.setItem('role', findUserRole(res.data));
                             props.login();
                         }
+                       // setIsSubmitting(false);
                     })
                     .catch(err => {
                         console.log(err);
                     })
-
             })
             .catch((error) => {
                 alert(error.response.data);
+                setIsSubmitting(false);
             })
+
     };
+    console.log(isSubmitting);
 
     const findUserRole = (roles) => {
         if (roles.includes("ADMIN")) {
@@ -149,8 +154,9 @@ export default function Login(props) {
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                disabled={isSubmitting}
                             >
-                                Sign In
+                                {isSubmitting ? 'Submitting...' : 'Sign In'}
                             </Button>
                             <Grid container>
                                 <Grid item xs>

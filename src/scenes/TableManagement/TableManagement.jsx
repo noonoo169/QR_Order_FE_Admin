@@ -9,6 +9,10 @@ import { useState, useEffect } from 'react';
 import tableService from '../../service/tableService';
 import QRCodeGenerate from '../../components/GenerateQR';
 import FormOrderTableEmpty from '../../components/FormOrderTableEmpty';
+import DeleteIcon from '@mui/icons-material/Delete';
+import DeleteDialog from '../../components/DeleteDialog'
+import FormUpdateTable from "../../components/FormUpdateTable";
+import FormDetailTable from '../../components/FormDetailTable';
 
 const TableManagement = () => {
 
@@ -55,20 +59,26 @@ const TableManagement = () => {
                                 </CardContent>
                             </CardActionArea>
                             <CardActions>
-                                <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }} >
-                                    <Box sx={{ marginRight: 1 }}>
-                                        {element.status === "UNEMPTY" ?
-                                            <Button variant="contained" color="success" size="smail" component={Link} to={"viewOrderDetail/" + element.id} startIcon={<VisibilityIcon />}>
-                                                View
-                                            </Button>
-                                            :
+                                {element.status === "UNEMPTY" ?
+                                    <Box sx={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
+                                        <Button variant="contained" color="success" size="smail" component={Link} to={"viewOrderDetail/" + element.id} >
+                                            View
+                                        </Button>
+                                        <Box sx={{ marginLeft: 1 }}>
+                                            <FormDetailTable name={element.name} id={element.id} status={element.status} handleRefreshTable={init} />
+                                        </Box>
+                                    </Box>
+                                    :
+                                    <Box sx={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "center" }}>
+                                        <Box>
                                             <FormOrderTableEmpty />
-                                        }
+                                        </Box>
+                                        <Box sx={{ marginLeft: 0.4 }}>
+                                            <FormDetailTable name={element.name} id={element.id} status={element.status} handleRefreshTable={init} />
+                                        </Box>
                                     </Box>
-                                    <Box>
-                                        {/* <QRCodeGenerate idTable={element.id} /> */}
-                                    </Box>
-                                </Box>
+                                }
+
                             </CardActions>
                         </Card>
                     </Grid>

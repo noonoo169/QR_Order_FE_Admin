@@ -1,53 +1,62 @@
-import axios from 'axios';
-import React, { useState } from 'react'
+import React from 'react';
+import { Box, Button } from '@mui/material';
 import QrCodeIcon from '@mui/icons-material/QrCode';
-import { Button } from '@mui/material';
+import QRCode from 'qrcode.react';
 
+const QRCodeGenerate = (props) => {
+    const urlWeb = `https://qr-order-client.netlify.app/home/${props.table.id}`
 
-export default function QRCodeGenerate(props) {
-    const urlWeb = '192.168.43.225:3000';
+    const downloadQR = () => {
+        const qrImage = document.getElementById('qrcode');
+        const canvas = document.createElement('canvas');
+        canvas.width = qrImage.width;
+        canvas.height = qrImage.height;
+        const ctx = canvas.getContext('2d');
 
-    const [qrCodeDataUrl, setQrCodeDataUrl] = useState(null);
+        // Draw the QR code image onto the canvas
+        ctx.drawImage(qrImage, 0, 0);
 
-    const handleGenerateQrCode = async () => {
-        try {
-            const response = await axios.get(
-                `http://localhost:8080/api/QRCode/genrateQRCode/${urlWeb}/${props.idTable}/350/350`,
-                {
-                    responseType: 'arraybuffer',
-                }
-            );
+        // Overlay text on the QR code image
+        ctx.font = '30px Arial';
+        ctx.fillStyle = 'black';
+        ctx.textAlign = 'center';
+        ctx.fillText(`Table: ${props.table.name}`, canvas.width / 2, canvas.height - 10);
 
-            // Chuyển đổi dữ liệu ArrayBuffer sang chuỗi base64 sử dụng TypedArray
-            const arrayBufferView = new Uint8Array(response.data);
-            const blob = new Blob([arrayBufferView], { type: 'image/png' });
-            const base64Data = await new Promise((resolve) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    resolve(reader.result);
-                };
-                reader.readAsDataURL(blob);
-            });
-
-            const dataUrl = base64Data;
-            setQrCodeDataUrl(dataUrl);
-            handleDownloadQrCode();
-        } catch (error) {
-            console.error('Error generating QR Code:', error);
-        }
+        // Trigger download of the canvas as an image
+        const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+        const downloadLink = document.createElement('a');
+        downloadLink.href = pngUrl;
+        downloadLink.download = `Table_QR_${props.table.name}.png`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
     };
-    const handleDownloadQrCode = () => {
-        const a = document.createElement('a');
-        a.href = qrCodeDataUrl;
-        a.download = 'qr-code.png';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-    };
+
 
     return (
-        <Button variant="contained" color="secondary" size="smail" onClick={handleGenerateQrCode} startIcon={<QrCodeIcon />}>
-            QR Code
-        </Button>
-    )
+        <Box>
+            <Box>
+                <QRCode
+                    id='qrcode'
+                    value={urlWeb}
+                    size={256}
+                    level={'L'}
+                    includeMargin={true}
+
+                />
+            </Box>
+            <Button
+                variant="contained"
+                color="secondary"
+                size="medium"
+                onClick={downloadQR}
+                startIcon={<QrCodeIcon />}
+            >
+                Download QR Code For Table {props.table.name}
+            </Button>
+
+        </Box>
+    );
 };
+
+export default QRCodeGenerate;
